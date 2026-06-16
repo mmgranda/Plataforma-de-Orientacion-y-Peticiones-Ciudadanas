@@ -1,0 +1,30 @@
+{
+  "name": "plataforma-de-orientacion-y-peticiones-ciudadanas",
+  "version": "1.0.0",
+  "description": "Un proyecto real necesita método, tablero, roles, código, evidencia y límites",
+  "main": "server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmgranda/Plataforma-de-Orientacion-y-Peticiones-Ciudadanas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mmgranda/Plataforma-de-Orientacion-y-Peticiones-Ciudadanas/issues"
+  },
+  "homepage": "https://github.com/mmgranda/Plataforma-de-Orientacion-y-Peticiones-Ciudadanas#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
