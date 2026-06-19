@@ -1,5 +1,6 @@
 require("dotenv").config();
 const peticionesRoutes = require("./src/routes/peticiones.routes");
+const authRoutes = require("./src/routes/auth.routes");
 
 const express = require("express");
 const path = require("path");
@@ -14,6 +15,8 @@ const APP_ENV = process.env.APP_ENV || "development";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/api/peticiones", peticionesRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.send(`
@@ -39,7 +42,7 @@ app.get("/estado", (req, res) => {
   });
 });
 
-app.use("/api/peticiones", peticionesRoutes);
+
 
 app.use((req, res) => {
   res.status(404).json({
