@@ -1,7 +1,7 @@
 # Variables de entorno y secretos
 .env
 *.env
-.env*
+
 
 # Dependencias
 node_modules/
@@ -21,3 +21,8 @@ tmp/*
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+credentials.json
+google-credentials.json
+service-account.json
+*.credentials.json
