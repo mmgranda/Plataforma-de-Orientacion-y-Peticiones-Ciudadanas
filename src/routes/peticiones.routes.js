@@ -1,4 +1,5 @@
 const express = require("express");
+const { prepararDocumentoEditable } = require("../services/documento.service");
 const { enviarPeticionAN8n } = require("../services/n8n.services");
 
 const router = express.Router();
@@ -31,6 +32,7 @@ router.post("/generar", async (req, res) => {
   try {
     const datos = req.body;
     const error = validarPeticion(datos);
+    const documentoEditable = await prepararDocumentoEditable(datos);
 
     if (error) {
       return res.status(400).json({
@@ -52,7 +54,8 @@ router.post("/generar", async (req, res) => {
       mensaje: "Solicitud recibida correctamente.",
       modo: resultadoN8n.modo || "n8n",
       estado: resultadoN8n.estado || "recibida",
-      linkDocumento: resultadoN8n.linkDocumento || null
+      linkDocumento: resultadoN8n.linkDocumento || documentoEditable.linkGoogleDoc || null ,
+      documentoEditable
     });
   } catch (error) {
     console.error("Error al generar petición:", error.message);
