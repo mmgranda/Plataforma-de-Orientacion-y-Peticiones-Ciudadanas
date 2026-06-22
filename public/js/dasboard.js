@@ -32,11 +32,30 @@ function pintarUsuario(usuario) {
   `;
 }
 
+function opcionesEstado(estadoActual) {
+  const estados = [
+    "borrador_generado",
+    "pendiente_revision",
+    "requiere_ajuste",
+    "revisado",
+    "listo_para_envio",
+    "enviado",
+    "cerrado"
+  ];
+
+  return estados
+    .map((estado) => {
+      const selected = estado === estadoActual ? "selected" : "";
+      return `<option value="${estado}" ${selected}>${estado}</option>`;
+    })
+    .join("");
+}
+
 function pintarPeticiones(peticiones) {
   const tbody = document.querySelector("#tablaPeticiones tbody");
 
   if (!peticiones.length) {
-    tbody.innerHTML = `<tr><td colspan="8">No hay solicitudes registradas.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9">No hay solicitudes registradas.</td></tr>`;
     return;
   }
 
@@ -53,9 +72,18 @@ function pintarPeticiones(peticiones) {
           <td>${item.entidad}</td>
           <td>${item.asunto}</td>
           <td>${item.tipoPeticion}</td>
-          <td><span class="estado">${item.estado}</span></td>
+          <td>
+            <select id="estado-${item.id}">
+              ${opcionesEstado(item.estado)}
+            </select>
+          </td>
           <td>${documento}</td>
-          <td>${item.observaciones || ""}</td>
+          <td>
+            <textarea id="observaciones-${item.id}" rows="3">${item.observaciones || ""}</textarea>
+          </td>
+          <td>
+            <button type="button" onclick="guardarEstado(${item.id})">Guardar</button>
+          </td>
         </tr>
       `;
     })
@@ -93,6 +121,45 @@ async function cargarDashboard() {
     pintarPeticiones(data.peticiones);
   } catch (error) {
     resumen.textContent = "Error al conectar con el backend.";
+    console.error(error);
+  }
+}
+
+async function guardarEstado(id) {
+  const sesion = obtenerSesion();
+
+  if (!sesion) {
+    window.location.href = "/login.html";
+    return;
+  }
+
+  const estado = document.getElementById(`estado-${id}`).value;
+  const observaciones = document.getElementById(`observaciones-${id}`).value.trim();
+
+  try {
+    const response = await fetch(`/api/dashboard/peticiones/${id}/estado`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sesion.token}`
+      },
+      body: JSON.stringify({
+        estado,
+        observaciones
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.mensaje || "No fue posible actualizar el estado.");
+      return;
+    }
+
+    alert(data.mensaje);
+    cargarDashboard();
+  } catch (error) {
+    alert("Error al conectar con el backend.");
     console.error(error);
   }
 }
