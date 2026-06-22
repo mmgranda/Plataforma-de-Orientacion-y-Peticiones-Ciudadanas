@@ -45,6 +45,7 @@ function validarDatos(datos) {
 }
 
 function generarBorradorLocal(datos) {
+  const orientacion = mensajeAyudaPorTipo(datos.tipoPeticion);
   return `${datos.ciudad}, ${datos.fecha}
 
 Señores
@@ -82,7 +83,7 @@ ${datos.nombre}
 ${datos.tipoDocumento} ${datos.documento}
 ${datos.correo}
 
-Advertencia: Este documento es un borrador editable de apoyo pedagógico y debe ser revisado antes de radicarse.`;
+Advertencia: Este documento es un borrador editable de apoyo pedagógico. Debe ser revisado antes de radicarse o usarse. La plataforma orienta, pero no reemplaza asesoría jurídica ni decisión de autoridad competente.`;
 }
 
 function mostrarVistaPrevia() {
@@ -155,6 +156,32 @@ async function enviarAlBackend(event) {
   }
 }
 
+function mensajeAyudaPorTipo(tipo) {
+  const mensajes = {
+    derecho_peticion:
+      "Use esta opción cuando necesita presentar una solicitud respetuosa ante una entidad o autoridad.",
+    informacion_publica:
+      "Use esta opción cuando quiere acceder a información pública o documentos de una entidad.",
+    copias:
+      "Use esta opción cuando necesita copia de documentos, respuestas, actos o expedientes.",
+    estado_tramite:
+      "Use esta opción cuando ya presentó una solicitud o trámite y necesita saber en qué va.",
+    orientacion_ruta:
+      "Use esta opción cuando no sabe qué entidad puede orientarle o recibir su solicitud.",
+    querella_policiva:
+      "Use esta opción solo como orientación cuando el asunto se relaciona con convivencia o una posible ruta ante autoridad de policía. No se genera una querella real en clase."
+  };
+
+  return mensajes[tipo] || "Seleccione un tipo de solicitud para ver una orientación inicial.";
+}
+
+function actualizarAyudaTipoPeticion() {
+  const tipo = document.getElementById("tipoPeticion").value;
+  const ayuda = document.getElementById("ayudaTipoPeticion");
+  ayuda.textContent = mensajeAyudaPorTipo(tipo);
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const fecha = document.getElementById("fecha");
   fecha.value = new Date().toISOString().split("T")[0];
@@ -162,5 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnVistaPrevia").addEventListener("click", mostrarVistaPrevia);
   document.getElementById("btnCopiar").addEventListener("click", copiarBorrador);
   document.getElementById("formPeticion").addEventListener("submit", enviarAlBackend);
+  document.getElementById("tipoPeticion").addEventListener("change", actualizarAyudaTipoPeticion);
+
 });
 
