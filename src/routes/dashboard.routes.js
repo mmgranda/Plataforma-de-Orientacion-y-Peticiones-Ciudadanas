@@ -1,6 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middleware/auth.middleware");
-const { listarPeticiones } = require("../services/peticiones.service");
+const { listarPeticiones, cambiarEstadoPeticion} = require("../services/peticiones.services");
 
 const router = express.Router();
 
@@ -23,5 +23,43 @@ router.get("/peticiones", authMiddleware, async (req, res) => {
     });
   }
 });
+
+router.patch("/peticiones/:id/estado", authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { estado, observaciones } = req.body;
+
+    if (!estado) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El estado es obligatorio."
+      });
+    }
+
+    const resultado = await cambiarEstadoPeticion(id, estado, observaciones);
+
+    if (!resultado.ok) {
+      return res.status(resultado.codigo).json({
+        ok: false,
+        mensaje: resultado.mensaje
+      });
+    }
+
+    return res.json({
+      ok: true,
+      mensaje: resultado.mensaje,
+      modo: "mock",
+      peticion: resultado.peticion
+    });
+  } catch (error) {
+    console.error("Error al cambiar estado:", error.message);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No fue posible actualizar el estado."
+    });
+  }
+});
+
 
 module.exports = router;
