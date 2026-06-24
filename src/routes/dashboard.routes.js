@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/peticiones", authMiddleware, async (req, res) => {
   try {
     const peticiones = await listarPeticiones();
+    
 
     return res.json({
       ok: true,
@@ -61,5 +62,5 @@ router.patch("/peticiones/:id/estado", authMiddleware, async (req, res) => {
   }
 });
 
-
 module.exports = router;
+

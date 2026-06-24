@@ -91,8 +91,8 @@ function pintarPeticiones(peticiones) {
 }
 
 async function cargarDashboard() {
+  
   const sesion = obtenerSesion();
-
   if (!sesion) {
     window.location.href = "/login.html";
     return;
