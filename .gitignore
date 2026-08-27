@@ -1,0 +1,18 @@
+# Variable de entorno y secretos
+.env
+*.env
+
+# Dependencias
+node_modules
+
+# Archivos subidos de prueba
+uploads/*
+!uploads/.gitkeep
+
+# Logs locales
+logs/*
+!logs/.gitkeep
+
+# Sistema operativo
+.Ds store
+Thumbs.db
